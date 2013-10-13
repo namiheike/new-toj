@@ -1,14 +1,37 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>NewToj</title>
-  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<%= yield %>
+    <title><%= (content_for?(:title) ? (yield(:title) + ' | ') : '' ) + 'NewTOJ' %></title>
 
-</body>
+    <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+    <%= csrf_meta_tags %>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <%= render 'layouts/navbar' %>
+
+    <div class="container">
+      <%= yield %>
+    </div>
+
+    <%= render 'layouts/footer' %>
+
+    <!-- javascript -->
+    <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+    <%= yield(:js) %>
+    <!-- only include controller-specific js accordingly -->
+    <% if controller_name.in? [] %>
+      <%= javascript_include_tag controller_name %>
+    <% end %>
+    <!-- javascript end -->
+
+  </body>
 </html>
