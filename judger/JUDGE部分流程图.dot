@@ -1,0 +1,113 @@
+digraph G {
+	//graph [ rankdir = TB ]
+	fontname = "WenQuanYi Zen Hei Mono"
+	fontsize = 8
+	
+	node [
+	    shape = box
+		fontname = "WenQuanYi Zen Hei Mono"
+		fontsize = 8
+	]
+
+	edge [
+		fontname = "WenQuanYi Zen Hei Mono"
+		fontsize = 8
+	]
+
+	subgraph cluster_about {
+	    about [label = "v0.8 12-04-14"]
+		label = "[TOJ_DEV_JUDGE部分流程图]"
+	}
+
+
+	subgraph cluster_interface {
+		a [label = "upload code file"];
+		d [label = "res.render('notify/notify',{error:'xxx.'});"];
+		label = "User Interface"
+		h [label="res.redirect('/status');"]
+		a -> d -> h[style=invis]
+	}
+
+    a -> b;
+    
+	subgraph cluster_server {
+	    b [label = "get http request"];
+	    c [label = "verify: no such problem,\nfile too large,\nunkonwn FileExt...", shape = diamond];
+	    e [label = "save file to /submitted/submit.id"]
+	    f [shape = "record" label="update db\l-increase db:sitestats:submits_amount\l-insert db:submits\l-modify db:submits:result_type to 0(pending)"]
+		label = "Web Server"
+	}
+//	c -> b [dir=back];
+//	e -> c [dir=back];
+//	f -> e [dir=back];
+	b -> c;
+	c -> d [label = "Y"];
+	c -> e;
+	e -> f;
+	f -> db1 [dir = both];
+	f -> db2 [dir = both];
+	f -> h;
+	
+	subgraph cluster_database {
+		db1 [label = "DB: users,submits..."];
+		db2 [label = "Content Warehouse: 题目,数据..."];
+		label = "Database"
+    	db1 -> db2 [style=invis]
+	}
+	
+	
+	subgraph cluster_scheduler {
+	    s1 [label = "get message from a judger"];
+	    s2 [label = "if (lastQueryNoNewSubmit==true &&\n lastQueryNoNewSubmitTime+delayTime <= NOW)" shape=diamond]
+	    s3 [label = "tell judger \"no new submit\""]
+	    s4 [label = "have pending submits in scheduler now" shape=diamond]
+	    s5 [label = "query db for pending submits" shape=diamond]
+	    //, get all pending submits"]
+	    s6 [label = "update lastQueryNoNewSubmit=false"]
+	    s7 [label = "update lastQueryNoNewSubmitTime=NOW"]
+	    // & lastQueryNoNewSubmitTime"]
+	    s8 [label = "get & save all pending submits"]
+	    s9 [label = "send the oldest one to this judger"]
+	    
+	    
+	    label = "Scheduler"
+	    s1 -> s2;
+	    s2 -> s3 [label="Y"];
+	    s2 -> s4 [label="N"];
+	    s4 -> s9 [label="Y"];
+	    s4 -> s5 [label="N"];
+	    s5 -> s6 [label="Y"];
+	    s5 -> s7 [label="N"];
+	    s7 -> s3;
+	    s6 -> s8 -> s9;
+	}
+	s5 -> db1 [dir=both]
+	
+	subgraph cluster_judger {
+	    j1 [label = "ask scheduler for\nnew submits" shape=diamond]
+	    j2 [label = "sleep for 0.1s"]
+	    j3 [label = "{submitID : xx,\lprobID : xx,\lUserID : xx ...}"]
+	    j4 [label = "check & update test data\nfor this prob\nfrom content warehouse"]
+	    j5 [label = "compile"]
+	    j6 [label = "run"]
+	    j7 [label = "check"]
+	    j8 [label = "get result"]
+	    j9 [label = "update db\l-about this submit\l-about this prob's pie chart\l-about this user's infomation\l--SNS, send event to his followers' event list"]
+	    
+	    
+	    label = "judger"
+	    j1 -> j2 [label="no new submits"]
+	    j2 -> j1
+	    j1 -> j3 -> j4 -> j5;
+	    j5 -> j6 -> j7 -> j8 -> j9 ->j1;
+	    j5 -> j8 [label="failed"]
+	    j6 -> j8 [label="failed"]
+	}
+	j4 -> db2[dir=both]
+	j9 -> db1[dir=both]
+	
+	//j1 -> s1;
+	
+}
+
+
