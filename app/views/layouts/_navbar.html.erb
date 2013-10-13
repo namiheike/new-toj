@@ -14,7 +14,7 @@ _navbar.html.erb
         <li class="active"><a href="#">Home</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><%= link_to 'Sign Up / Sign In', '' %></li>
+        <li><%= link_to 'Sign Up / Sign In', user_omniauth_authorize_path(:renren) %></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div>

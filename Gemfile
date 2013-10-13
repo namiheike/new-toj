@@ -1,4 +1,5 @@
-source 'https://rubygems.org'
+source 'http://ruby.taobao.org'
+# source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
@@ -44,6 +45,27 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+group :development do
+  gem 'awesome_print'
+
+  gem 'pry'
+  gem 'pry-debugger'
+end
+
+# 
+gem 'figaro' # load application.yml config to ENV
+
+# 
+gem 'rails-i18n'
+
 # bootstrap
-gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails',
-                              :github => 'anjlab/bootstrap-rails'
+gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails', :github => 'anjlab/bootstrap-rails'
+
+# devise
+gem 'devise', github: 'plataformatec/devise'
+gem 'devise-i18n'
+
+# omniauth
+gem 'omniauth'
+gem 'omniauth-renren-oauth2'
+gem 'omniauth-qq'

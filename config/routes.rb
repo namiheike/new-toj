@@ -1,5 +1,4 @@
 NewToj::Application.routes.draw do
-  get "pages/home"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -54,6 +53,13 @@ NewToj::Application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  # devise
+  devise_for :users#, controllers: { omniauth_callbacks: 'oauth_services' }
+  # devise_scope :user do
+    # get 'users/oauth_bind' => 'oauth_bind#new_from_oauth', as: :oauth_bind_new
+    # post 'users/oauth_bind' => 'oauth_bind#bind_with_oauth'
+  # end
 
   # static pages & root
   get 'pages/:page_name' => 'pages#show'
